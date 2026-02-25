@@ -1,0 +1,12 @@
+{% extends 'portal/base.html' %}
+
+{% block title %}{{ post.title }} | Actualites{% endblock %}
+
+{% block content %}
+<section class="narrow-page">
+  <p class="muted">{{ post.publish_date|date:'d/m/Y H:i' }}</p>
+  <h1>{{ post.title }}</h1>
+  <p>{{ post.content|linebreaks }}</p>
+  <p><a href="{% url 'portal:news_list' %}">Retour aux actualites</a></p>
+</section>
+{% endblock %}

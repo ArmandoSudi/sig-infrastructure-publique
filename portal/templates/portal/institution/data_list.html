@@ -1,0 +1,37 @@
+{% extends 'portal/base.html' %}
+
+{% block title %}Donnees institutionnelles{% endblock %}
+
+{% block content %}
+<section class="narrow-page">
+  <h1>Catalogue des infrastructures</h1>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Couche</th>
+          <th>Zone</th>
+          <th>Statut</th>
+          <th>Mise a jour</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for feature in features %}
+          <tr>
+            <td>{{ feature.name }}</td>
+            <td>{{ feature.layer.name }}</td>
+            <td>{{ feature.province.name|default:'-' }} / {{ feature.city.name|default:'-' }}</td>
+            <td>{{ feature.get_status_display }}</td>
+            <td>{{ feature.updated_at|date:'d/m/Y' }}</td>
+            <td><a href="{% url 'portal:institution_data_edit' feature.id %}">Proposer une modification</a></td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6">Aucune donnee disponible.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'portal/base.html' %}
+
+{% block title %}Connexion institutionnelle{% endblock %}
+
+{% block content %}
+<section class="narrow-page auth-page">
+  <h1>Acces institutionnel securise</h1>
+  <p class="muted">Connectez-vous pour soumettre ou valider les mises a jour d'infrastructures.</p>
+  <form method="post" class="panel form-panel auth-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn" type="submit">Se connecter</button>
+  </form>
+</section>
+{% endblock %}

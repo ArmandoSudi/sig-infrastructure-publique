@@ -1,0 +1,32 @@
+{% extends 'portal/base.html' %}
+
+{% block title %}Tableau de bord institutionnel{% endblock %}
+
+{% block content %}
+<section class="narrow-page">
+  <h1>Tableau de bord institutionnel</h1>
+  <div class="stats-grid">
+    <article class="stat-card"><h3>Soumissions</h3><p>{{ submitted }}</p></article>
+    <article class="stat-card"><h3>En attente</h3><p>{{ pending }}</p></article>
+    <article class="stat-card"><h3>Validees</h3><p>{{ approved }}</p></article>
+    <article class="stat-card"><h3>Rejetees</h3><p>{{ rejected }}</p></article>
+  </div>
+
+  <div class="hero-actions" style="margin-bottom: 1rem;">
+    <a class="btn" href="{% url 'portal:institution_data_new' %}">Nouvelle soumission</a>
+    <a class="btn btn-muted" href="{% url 'portal:institution_data' %}">Consulter les donnees</a>
+    <a class="btn btn-muted" href="{% url 'portal:institution_history' %}">Historique</a>
+  </div>
+
+  <article class="panel">
+    <h2>Activite recente</h2>
+    <ul class="link-list">
+      {% for item in recent %}
+        <li>#{{ item.id }} · {{ item.layer.name }} · {{ item.get_status_display }} · {{ item.updated_at|date:'d/m/Y H:i' }}</li>
+      {% empty %}
+        <li>Aucune activite recente.</li>
+      {% endfor %}
+    </ul>
+  </article>
+</section>
+{% endblock %}

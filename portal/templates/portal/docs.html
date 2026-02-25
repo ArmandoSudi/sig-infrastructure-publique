@@ -1,0 +1,32 @@
+{% extends 'portal/base.html' %}
+
+{% block title %}{{ title }} | Documentation{% endblock %}
+
+{% block content %}
+<section class="narrow-page">
+  <h1>{{ title }}</h1>
+  <div class="tabs">
+    <a href="{% url 'portal:documentation' %}">Vue generale</a>
+    <a href="{% url 'portal:documentation_page' 'guide' %}">Guide</a>
+    <a href="{% url 'portal:documentation_page' 'normes' %}">Normes</a>
+    <a href="{% url 'portal:documentation_page' 'references' %}">References</a>
+  </div>
+
+  {% if active == 'guide' %}
+    <article class="panel"><h2>Guide d'utilisation</h2><p>1) Choisir une couche. 2) Filtrer par zone. 3) Cliquer un objet pour la fiche technique.</p></article>
+  {% elif active == 'normes' %}
+    <article class="panel"><h2>Normes de saisie</h2><p>Formats recommandes: GeoJSON, CSV geocode. Champs minimaux: nom, type, statut, gestionnaire, date MAJ.</p></article>
+  {% elif active == 'references' %}
+    <article class="panel"><h2>References techniques et legales</h2><p>Interop SIG: WMS/WFS/GeoJSON, gouvernance des donnees publiques et standards nationaux de securite.</p></article>
+  {% else %}
+    <article class="panel">
+      <h2>Ressources disponibles</h2>
+      <ul class="link-list">
+        {% for label, key in sections %}
+          <li><a href="{% url 'portal:documentation_page' key %}">{{ label }}</a></li>
+        {% endfor %}
+      </ul>
+    </article>
+  {% endif %}
+</section>
+{% endblock %}

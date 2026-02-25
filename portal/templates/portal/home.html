@@ -1,0 +1,62 @@
+{% extends 'portal/base.html' %}
+
+{% block title %}Accueil | SIG Infrastructures{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div>
+    <p class="eyebrow">Plateforme SIG nationale</p>
+    <h1>Cartographie coordonnee des infrastructures publiques en RDC</h1>
+    <p>Consultez les couches d'electricite, eau, telecom, voirie et drainage avec une vue unifiee, des filtres par zone et un historique de mises a jour.</p>
+    <div class="hero-actions">
+      <a class="btn" href="{% url 'portal:map' %}">Ouvrir la carte nationale</a>
+      <a class="btn btn-muted" href="{% url 'portal:documentation' %}">Lire la documentation</a>
+    </div>
+  </div>
+  <div class="stats-grid">
+    {% for stat in stats %}
+      <article class="stat-card">
+        <h3>{{ stat.layer__name }}</h3>
+        <p>{{ stat.total }} objets</p>
+      </article>
+    {% empty %}
+      <article class="stat-card"><h3>Demarrage</h3><p>Ajoutez des donnees via le portail institutionnel.</p></article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="panel-grid">
+  <article class="panel">
+    <h2>Couches disponibles</h2>
+    <ul class="link-list">
+      {% for layer in layers %}
+        <li><a href="{% url 'portal:infrastructure_page' layer.key %}">{{ layer.name }}</a></li>
+      {% empty %}
+        <li>Aucune couche active.</li>
+      {% endfor %}
+    </ul>
+  </article>
+
+  <article class="panel">
+    <h2>Actualites recentes</h2>
+    <ul class="link-list">
+      {% for post in recent_news %}
+        <li><a href="{% url 'portal:news_detail' post.slug %}">{{ post.title }}</a></li>
+      {% empty %}
+        <li>Pas d'actualites publiees.</li>
+      {% endfor %}
+    </ul>
+  </article>
+
+  <article class="panel">
+    <h2>Soumissions en attente</h2>
+    <ul class="link-list">
+      {% for item in recent_updates %}
+        <li>#{{ item.id }} · {{ item.layer.name }} · {{ item.submitted_by.username }}</li>
+      {% empty %}
+        <li>Aucune soumission en attente.</li>
+      {% endfor %}
+    </ul>
+  </article>
+</section>
+{% endblock %}

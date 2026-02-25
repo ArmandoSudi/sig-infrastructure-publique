@@ -1,0 +1,40 @@
+{% extends 'portal/base.html' %}
+
+{% block title %}Administration utilisateurs{% endblock %}
+
+{% block content %}
+<section class="wide-page">
+  <h1>Gestion des utilisateurs</h1>
+  <div class="stack">
+    {% for profile in profiles %}
+      <form method="post" class="panel form-panel">
+        {% csrf_token %}
+        <input type="hidden" name="profile_id" value="{{ profile.id }}">
+        <h3>{{ profile.user.username }}</h3>
+        <p class="muted">{{ profile.user.email }}</p>
+        <label>Role
+          <select name="role">
+            {% for value, label in roles %}
+              <option value="{{ value }}" {% if profile.role == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>Perimetre
+          <select name="scope">
+            {% for value, label in scopes %}
+              <option value="{{ value }}" {% if profile.scope == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>Valeur du perimetre
+          <input type="text" name="scope_value" value="{{ profile.scope_value }}">
+        </label>
+        <label><input type="checkbox" name="is_active" {% if profile.user.is_active %}checked{% endif %}> Compte actif</label>
+        <button class="btn btn-sm" type="submit">Enregistrer</button>
+      </form>
+    {% empty %}
+      <p>Aucun utilisateur profile.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

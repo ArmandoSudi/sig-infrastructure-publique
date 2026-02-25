@@ -1,0 +1,44 @@
+{% extends 'portal/base.html' %}
+
+{% block title %}Journal d'audit{% endblock %}
+
+{% block content %}
+<section class="wide-page">
+  <h1>Journal des acces et actions</h1>
+  <form method="get" class="panel filter-row">
+    <label>Action
+      <input type="text" name="action" value="{{ action|default:'' }}">
+    </label>
+    <label>Utilisateur
+      <input type="text" name="actor" value="{{ actor|default:'' }}">
+    </label>
+    <button class="btn" type="submit">Rechercher</button>
+  </form>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Acteur</th>
+          <th>Action</th>
+          <th>Cible</th>
+          <th>IP</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for entry in logs %}
+          <tr>
+            <td>{{ entry.timestamp|date:'d/m/Y H:i:s' }}</td>
+            <td>{{ entry.actor.username|default:'Anonyme' }}</td>
+            <td>{{ entry.action }}</td>
+            <td>{{ entry.target_type }} #{{ entry.target_id }}</td>
+            <td>{{ entry.ip_address|default:'-' }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5">Aucun evenement trouve.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

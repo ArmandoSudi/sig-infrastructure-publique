@@ -1,0 +1,28 @@
+{% extends 'portal/base.html' %}
+
+{% block title %}Parametrage des couches{% endblock %}
+
+{% block content %}
+<section class="wide-page">
+  <h1>Parametrage des couches cartographiques</h1>
+  <div class="stack">
+    {% for layer in layers %}
+      <form method="post" class="panel form-panel">
+        {% csrf_token %}
+        <input type="hidden" name="layer_id" value="{{ layer.id }}">
+        <h3>{{ layer.name }}</h3>
+        <p class="muted">{{ layer.description }}</p>
+        <label>Champs visibles (comma-separated)
+          <input type="text" name="visible_fields" value="{{ layer.visible_fields|join:', ' }}">
+        </label>
+        <label>Champs sensibles (masques public)
+          <input type="text" name="sensitive_fields" value="{{ layer.sensitive_fields|join:', ' }}">
+        </label>
+        <label><input type="checkbox" name="is_active" {% if layer.is_active %}checked{% endif %}> Couche active</label>
+        <label><input type="checkbox" name="public_visible" {% if layer.public_visible %}checked{% endif %}> Visible publiquement</label>
+        <button class="btn btn-sm" type="submit">Mettre a jour</button>
+      </form>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

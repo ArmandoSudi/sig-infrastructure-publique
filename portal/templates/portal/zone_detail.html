@@ -1,0 +1,21 @@
+{% extends 'portal/base.html' %}
+
+{% block title %}{{ title }} | Zone{% endblock %}
+
+{% block content %}
+<section class="narrow-page">
+  <h1>{{ title }}</h1>
+  <p class="muted">{{ subtitle }}</p>
+  <div class="stack">
+    {% for feature in features %}
+      <article class="panel">
+        <h3>{{ feature.name }}</h3>
+        <p>{{ feature.layer.name }} · {{ feature.get_status_display }} · {{ feature.updated_at|date:'d/m/Y' }}</p>
+        <p>Gestionnaire: {{ feature.manager_name|default:'Non renseigne' }}</p>
+      </article>
+    {% empty %}
+      <p>Aucune infrastructure enregistree pour cette zone.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

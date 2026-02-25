@@ -1,0 +1,61 @@
+{% extends 'portal/base.html' %}
+{% load static %}
+
+{% block title %}Validation des soumissions{% endblock %}
+
+{% block content %}
+<section class="wide-page">
+  <h1>File de validation</h1>
+  <div class="stack">
+    {% for request_item in queue %}
+      <article class="panel">
+        <h3>Soumission #{{ request_item.id }} · {{ request_item.layer.name }}</h3>
+        <p>Action: {{ request_item.get_action_display }} · Par {{ request_item.submitted_by.username }} · {{ request_item.updated_at|date:'d/m/Y H:i' }}</p>
+        <p><strong>Type de travaux:</strong> {{ request_item.work_type }}</p>
+        <p><strong>Profondeur:</strong> {{ request_item.excavation_depth }}</p>
+        <p><strong>Calendrier:</strong> {{ request_item.excavation_start_date|date:'d/m/Y' }} → {{ request_item.excavation_end_date|date:'d/m/Y' }}</p>
+        <p><strong>Entite:</strong> {{ request_item.entity_name }}</p>
+        <p><strong>Contact:</strong> {{ request_item.contact_details }}</p>
+        {% if request_item.kml_file %}
+          <p><strong>Fichier KML:</strong> <a href="{{ request_item.kml_file.url }}">Telecharger</a></p>
+        {% endif %}
+        <p>{{ request_item.comment }}</p>
+        <details>
+          <summary>Proprietes proposees</summary>
+          <pre>{{ request_item.proposed_properties|pprint }}</pre>
+        </details>
+        <button class="btn btn-sm btn-muted" type="button" data-toggle-map data-target="validation-map-{{ request_item.id }}">Voir sur la carte</button>
+        <div
+          class="mini-map is-hidden validation-map"
+          id="validation-map-{{ request_item.id }}"
+          data-request-id="{{ request_item.id }}"
+        ></div>
+        <div class="map-legend">
+          <span class="legend-dot current"></span> Actuel
+          <span class="legend-dot proposed"></span> Propose
+        </div>
+        {{ request_item.proposed_geometry|json_script:request_item.proposed_script_id }}
+        {% if request_item.feature %}
+          {{ request_item.feature.geometry|json_script:request_item.current_script_id }}
+        {% else %}
+          <script type="application/json" id="{{ request_item.current_script_id }}">{}</script>
+        {% endif %}
+        <form method="post" class="inline-actions">
+          {% csrf_token %}
+          <input type="hidden" name="request_id" value="{{ request_item.id }}">
+          <textarea name="review_comment" rows="2" placeholder="Commentaire de validation/rejet"></textarea>
+          <button class="btn btn-sm" type="submit" name="decision" value="approve">Approuver</button>
+          <button class="btn btn-sm btn-danger" type="submit" name="decision" value="reject">Rejeter</button>
+          <button class="btn btn-sm btn-muted" type="submit" name="decision" value="needs_changes">Demander correction</button>
+        </form>
+      </article>
+    {% empty %}
+      <p>Aucune soumission en attente.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'portal/js/validation.js' %}"></script>
+{% endblock %}

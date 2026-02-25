@@ -1,0 +1,49 @@
+{% extends 'portal/base.html' %}
+
+{% block title %}{{ title }} | Zones{% endblock %}
+
+{% block content %}
+<section class="narrow-page">
+  <h1>{{ title }}</h1>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Contexte</th>
+          <th>Infrastructures</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+          <tr>
+            <td>{{ item.name }}</td>
+            <td>
+              {% if item_type == 'city' %}
+                {{ item.province.name }}
+              {% elif item_type == 'axis' %}
+                {{ item.city.name }}
+              {% else %}
+                {{ item.code }}
+              {% endif %}
+            </td>
+            <td>{{ item.feature_count }}</td>
+            <td>
+              {% if item_type == 'province' %}
+                <a href="{% url 'portal:zone_province_detail' item.id %}">Consulter</a>
+              {% elif item_type == 'city' %}
+                <a href="{% url 'portal:zone_city_detail' item.id %}">Consulter</a>
+              {% else %}
+                <a href="{% url 'portal:zone_axis_detail' item.id %}">Consulter</a>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="4">Aucune donnee.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

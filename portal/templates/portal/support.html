@@ -1,0 +1,14 @@
+{% extends 'portal/base.html' %}
+
+{% block title %}Support technique | SIG{% endblock %}
+
+{% block content %}
+<section class="narrow-page">
+  <h1>Support technique</h1>
+  <form method="post" class="panel form-panel">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn" type="submit">Envoyer</button>
+  </form>
+</section>
+{% endblock %}

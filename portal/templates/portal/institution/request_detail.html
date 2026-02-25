@@ -1,0 +1,56 @@
+{% extends 'portal/base.html' %}
+
+{% block title %}Soumission #{{ item.id }}{% endblock %}
+
+{% block content %}
+<section class="narrow-page">
+  <h1>Soumission #{{ item.id }}</h1>
+  <p class="muted">{{ item.get_action_display }} · {{ item.layer.name }} · {{ item.get_status_display }}</p>
+
+  <article class="panel">
+    <h2>Resume</h2>
+    <p><strong>Soumis par:</strong> {{ item.submitted_by.username }}</p>
+    <p><strong>Soumis le:</strong> {{ item.submitted_at|date:'d/m/Y H:i' }}</p>
+    <p><strong>Derniere mise a jour:</strong> {{ item.updated_at|date:'d/m/Y H:i' }}</p>
+    <p><strong>Type de travaux:</strong> {{ item.work_type }}</p>
+    <p><strong>Profondeur d'excavation:</strong> {{ item.excavation_depth }}</p>
+    <p><strong>Calendrier d'excavation:</strong> {{ item.excavation_start_date|date:'d/m/Y' }} → {{ item.excavation_end_date|date:'d/m/Y' }}</p>
+    <p><strong>Entite:</strong> {{ item.entity_name }}</p>
+    <p><strong>Contact:</strong> {{ item.contact_details }}</p>
+    {% if item.kml_file %}
+      <p><strong>Fichier KML:</strong> <a href="{{ item.kml_file.url }}">Telecharger</a></p>
+    {% endif %}
+    {% if item.review_comment %}
+      <p><strong>Commentaire de validation:</strong> {{ item.review_comment }}</p>
+    {% endif %}
+  </article>
+
+  <article class="panel">
+    <h2>Donnees proposees</h2>
+    <pre>{{ item.proposed_properties|pprint }}</pre>
+    <pre>{{ item.proposed_geometry|pprint }}</pre>
+  </article>
+
+  {% if item.feature %}
+    <article class="panel">
+      <h2>Donnees actuelles (objet cible)</h2>
+      <p><strong>{{ item.feature.name }}</strong> · {{ item.feature.layer.name }}</p>
+      <pre>{{ item.feature.properties|pprint }}</pre>
+      <pre>{{ item.feature.geometry|pprint }}</pre>
+    </article>
+  {% endif %}
+
+  {% if can_edit %}
+    <article class="panel form-panel">
+      <h2>Mettre a jour la soumission</h2>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn" type="submit">Resoumettre</button>
+      </form>
+    </article>
+  {% else %}
+    <p class="muted">Cette soumission n'est pas modifiable dans son etat actuel.</p>
+  {% endif %}
+</section>
+{% endblock %}

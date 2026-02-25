@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}SIG Infrastructures Publiques{% endblock %}</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <link rel="stylesheet" href="{% static 'portal/css/site.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <div class="site-shell">
+    <header class="topbar">
+      <a class="brand" href="{% url 'portal:home' %}">
+        <span class="brand-mark">SIG</span>
+        <span>Infrastructures RDC</span>
+      </a>
+      <button class="menu-toggle" type="button" data-menu-toggle>Menu</button>
+      <nav class="main-nav" data-main-nav>
+        <a href="{% url 'portal:map' %}">Carte</a>
+        <a href="{% url 'portal:news_list' %}">Actualites</a>
+        <a href="{% url 'portal:zone_provinces' %}">Zones</a>
+        <a href="{% url 'portal:documentation' %}">Documentation</a>
+        <a href="{% url 'portal:contact' %}">Contact</a>
+        {% if user.is_authenticated %}
+          <a href="{% url 'portal:institution_dashboard' %}">Portail institutionnel</a>
+          {% if current_role == 'NATIONAL_ADMIN' or current_role == 'PROVINCIAL_ADMIN' %}
+            <a href="{% url 'portal:admin_validation' %}">Administration</a>
+          {% endif %}
+          <form class="logout-form" method="post" action="{% url 'portal:logout' %}">
+            {% csrf_token %}
+            <button class="pill link-button" type="submit">Deconnexion</button>
+          </form>
+        {% else %}
+          <a class="pill" href="{% url 'portal:login' %}">Acces institutionnel</a>
+        {% endif %}
+      </nav>
+    </header>
+
+    {% if messages %}
+      <section class="messages">
+        {% for message in messages %}
+          <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </section>
+    {% endif %}
+
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+      <div>
+        <strong>Plateforme SIG nationale</strong>
+        <p>Cartographie collaborative des infrastructures publiques.</p>
+      </div>
+      <div>
+        <p>Role actif: <span class="badge">{{ current_role }}</span></p>
+        <p><a href="{% url 'portal:support' %}">Support technique</a> · <a href="{% url 'portal:report' %}">Signaler une anomalie</a></p>
+      </div>
+    </footer>
+  </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="{% static 'portal/js/app.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

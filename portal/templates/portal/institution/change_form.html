@@ -1,0 +1,18 @@
+{% extends 'portal/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<section class="narrow-page">
+  <h1>{{ title }}</h1>
+  {% if feature %}
+    <p class="muted">Objet actuel: {{ feature.name }} ({{ feature.layer.name }})</p>
+  {% endif %}
+  <p class="muted">Veuillez fournir un fichier KML ou des donnees GeoJSON pour la geometrie.</p>
+  <form method="post" class="panel form-panel" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn" type="submit">Soumettre pour validation</button>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'portal/base.html' %}
+
+{% block title %}Contact | SIG{% endblock %}
+
+{% block content %}
+<section class="narrow-page">
+  <h1>Contact & assistance</h1>
+  <div class="panel-grid">
+    <article class="panel">
+      <h2>Support technique</h2>
+      <p>Email: support.sig@infrastructures.cd</p>
+      <p>Telephone: +243 000 000 000</p>
+      <p><a href="{% url 'portal:support' %}">Envoyer une demande</a></p>
+    </article>
+    <article class="panel">
+      <h2>Signalement d'anomalies</h2>
+      <p>Partagez toute incoherence cartographique ou incident de donnees.</p>
+      <p><a href="{% url 'portal:report' %}">Faire un signalement</a></p>
+    </article>
+  </div>
+</section>
+{% endblock %}

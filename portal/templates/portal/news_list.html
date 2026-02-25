@@ -1,0 +1,28 @@
+{% extends 'portal/base.html' %}
+
+{% block title %}Actualites | SIG{% endblock %}
+
+{% block content %}
+<section class="narrow-page">
+  <h1>Actualites et mises a jour</h1>
+  <div class="stack">
+    {% for post in page_obj %}
+      <article class="panel">
+        <p class="muted">{{ post.publish_date|date:'d/m/Y' }}</p>
+        <h2><a href="{% url 'portal:news_detail' post.slug %}">{{ post.title }}</a></h2>
+        <p>{{ post.summary|default:post.content|truncatechars:180 }}</p>
+      </article>
+    {% empty %}
+      <p>Aucune actualite pour le moment.</p>
+    {% endfor %}
+  </div>
+
+  {% if page_obj.paginator.num_pages > 1 %}
+    <div class="pagination">
+      {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">Precedent</a>{% endif %}
+      <span>Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Suivant</a>{% endif %}
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

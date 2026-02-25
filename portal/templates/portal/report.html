@@ -1,0 +1,14 @@
+{% extends 'portal/base.html' %}
+
+{% block title %}Signalement | SIG{% endblock %}
+
+{% block content %}
+<section class="narrow-page">
+  <h1>Signaler une anomalie</h1>
+  <form method="post" class="panel form-panel">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn" type="submit">Soumettre le signalement</button>
+  </form>
+</section>
+{% endblock %}

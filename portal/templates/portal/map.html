@@ -1,0 +1,61 @@
+{% extends 'portal/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} | SIG{% endblock %}
+
+{% block content %}
+<section class="map-page">
+  <div class="page-heading">
+    <h1>{{ title }}</h1>
+    <p>{{ subtitle }}</p>
+    {% if visibility_note %}<p class="muted">{{ visibility_note }}</p>{% endif %}
+  </div>
+
+  <div class="map-layout">
+    <aside class="map-controls">
+      <h2>Filtres</h2>
+      <label>Recherche
+        <input id="map-search" type="search" placeholder="Nom, ID, gestionnaire...">
+      </label>
+      <label>Province
+        <input id="map-province" type="text" placeholder="Ex: Kinshasa">
+      </label>
+      <label>Ville
+        <input id="map-city" type="text" placeholder="Ex: Gombe">
+      </label>
+      <label>Axe / Quartier
+        <input id="map-axis" type="text" placeholder="Ex: Boulevard 30 Juin">
+      </label>
+      <label>Couche
+        <select id="map-layer">
+          <option value="">Toutes les couches</option>
+          {% for entry in layers %}
+            <option value="{{ entry.key }}" {% if active_layer == entry.key %}selected{% endif %}>{{ entry.name }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <button class="btn" type="button" id="apply-map-filters">Appliquer</button>
+      <button class="btn btn-muted" type="button" id="reset-map-filters">Reinitialiser</button>
+
+      <div class="legend">
+        <h3>Legende</h3>
+        {% for entry in layers %}
+          <p><span class="dot" style="background: {{ entry.style_config.color|default:'#3b82f6' }}"></span>{{ entry.name }}</p>
+        {% endfor %}
+      </div>
+    </aside>
+
+    <div class="map-stage">
+      <div id="national-map" class="map-canvas" data-api-url="{% url 'portal:map_features_api' %}" data-default-layer="{{ active_layer }}"></div>
+      <div id="feature-details" class="detail-drawer">
+        <h3>Fiche technique</h3>
+        <p>Cliquez sur un objet de la carte pour afficher ses attributs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'portal/js/map.js' %}"></script>
+{% endblock %}
